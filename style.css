@@ -451,7 +451,6 @@ span {
 
 
 
-/* أضف في نهاية ملف style.css */
 
 /* ========== ADVANCED FLOATING ANIMATION ========== */
 .home-image,
@@ -1147,6 +1146,8 @@ span {
     text-align: center;
     padding: 2rem 4%;
   }
+
+ 
 
   .footer-text p {
     font-size: 1.3rem;
