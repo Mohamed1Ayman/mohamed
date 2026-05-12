@@ -10,7 +10,7 @@ menuIcon.onclick = (e) => {
 
 // Close menu when clicking on a link
 let navLinks = document.querySelectorAll(".navbar a");
-navLinks.forEach(link => {
+navLinks.forEach((link) => {
   link.addEventListener("click", () => {
     menuIcon.classList.remove("open");
     navbar.classList.remove("active");
@@ -35,7 +35,7 @@ window.onscroll = () => {
     let offset = sec.offsetTop - 150;
     let height = sec.offsetHeight;
     let id = sec.getAttribute("id");
-    
+
     if (top >= offset && top < offset + height) {
       naveLinks.forEach((links) => {
         links.classList.remove("active");
@@ -51,224 +51,321 @@ window.onscroll = () => {
   header.classList.toggle("sticky", window.scrollY > 100);
 };
 
- // ========== ADVANCED SLIDER (FIXED) ==========
-      class AdvancedSlider {
-        constructor(config) {
-          this.wrapper = document.getElementById(config.wrapperId);
-          this.slides = this.wrapper.querySelectorAll(".slide");
-          this.prevBtn = document.getElementById(config.prevBtnId);
-          this.nextBtn = document.getElementById(config.nextBtnId);
-          this.dotsContainer = document.getElementById(config.dotsId);
-          this.progressBar = document.getElementById(config.progressId);
+// ========== ADVANCED SLIDER (FIXED) ==========
+class AdvancedSlider {
+  constructor(config) {
+    this.wrapper = document.getElementById(config.wrapperId);
+    this.slides = this.wrapper.querySelectorAll(".slide");
+    this.prevBtn = document.getElementById(config.prevBtnId);
+    this.nextBtn = document.getElementById(config.nextBtnId);
+    this.dotsContainer = document.getElementById(config.dotsId);
+    this.progressBar = document.getElementById(config.progressId);
 
-          this.currentIndex = 0;
-          this.slideCount = this.slides.length;
-          this.autoPlayInterval = config.autoPlayInterval || 4000;
-          this.autoPlayTimer = null;
-          this.isTransitioning = false;
+    this.currentIndex = 0;
+    this.slideCount = this.slides.length;
+    this.autoPlayInterval = config.autoPlayInterval || 4000;
+    this.autoPlayTimer = null;
+    this.isTransitioning = false;
 
-          // تأكد من إنشاء slider واحد فقط
-          if (this.slideCount === 0) return;
+    // تأكد من إنشاء slider واحد فقط
+    if (this.slideCount === 0) return;
 
-          this.init();
-        }
+    this.init();
+  }
 
-        init() {
-          // إنشاء النقاط
-          this.createDots();
+  init() {
+    // إنشاء النقاط
+    this.createDots();
 
-          // ضبط العرض الابتدائي
-          this.goToSlide(0, false);
+    // ضبط العرض الابتدائي
+    this.goToSlide(0, false);
 
-          // تأكيد إن أي صورة تظهر كاملة
-          this.fixSlideWidths();
+    // تأكيد إن أي صورة تظهر كاملة
+    this.fixSlideWidths();
 
-          // Event listeners
-          this.prevBtn.addEventListener("click", () => this.prevSlide());
-          this.nextBtn.addEventListener("click", () => this.nextSlide());
+    // Event listeners
+    this.prevBtn.addEventListener("click", () => this.prevSlide());
+    this.nextBtn.addEventListener("click", () => this.nextSlide());
 
-          // Keyboard navigation
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowLeft") this.prevSlide();
-            if (e.key === "ArrowRight") this.nextSlide();
-          });
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") this.prevSlide();
+      if (e.key === "ArrowRight") this.nextSlide();
+    });
 
-          // Touch / Swipe support
-          this.addTouchSupport();
+    // Touch / Swipe support
+    this.addTouchSupport();
 
-          // بدء التشغيل التلقائي
-          this.startAutoPlay();
+    // بدء التشغيل التلقائي
+    this.startAutoPlay();
 
-          // إيقاف مؤقت عند hover
-          const container = this.wrapper.parentElement;
-          container.addEventListener("mouseenter", () => this.stopAutoPlay());
-          container.addEventListener("mouseleave", () => this.startAutoPlay());
+    // إيقاف مؤقت عند hover
+    const container = this.wrapper.parentElement;
+    container.addEventListener("mouseenter", () => this.stopAutoPlay());
+    container.addEventListener("mouseleave", () => this.startAutoPlay());
 
-          // معالجة تغيير حجم النافذة
-          window.addEventListener("resize", () => this.fixSlideWidths());
-        }
+    // معالجة تغيير حجم النافذة
+    window.addEventListener("resize", () => this.fixSlideWidths());
+  }
 
-        fixSlideWidths() {
-          // تأكيد إن كل سلايد يأخذ عرض الحاوية بالكامل
-          const containerWidth = this.wrapper.parentElement.clientWidth;
-          this.slides.forEach((slide) => {
-            slide.style.minWidth = containerWidth + "px";
-            slide.style.width = containerWidth + "px";
-          });
-          // إعادة ضبط الموقع بعد تغيير المقاسات
-          this.wrapper.style.transform = `translateX(-${this.currentIndex * containerWidth}px)`;
-        }
+  fixSlideWidths() {
+    // تأكيد إن كل سلايد يأخذ عرض الحاوية بالكامل
+    const containerWidth = this.wrapper.parentElement.clientWidth;
+    this.slides.forEach((slide) => {
+      slide.style.minWidth = containerWidth + "px";
+      slide.style.width = containerWidth + "px";
+    });
+    // إعادة ضبط الموقع بعد تغيير المقاسات
+    this.wrapper.style.transform = `translateX(-${this.currentIndex * containerWidth}px)`;
+  }
 
-        createDots() {
-          this.dotsContainer.innerHTML = "";
-          for (let i = 0; i < this.slideCount; i++) {
-            const dot = document.createElement("span");
-            dot.classList.add("dot");
-            if (i === 0) dot.classList.add("active");
-            dot.addEventListener("click", () => this.goToSlide(i, true));
-            this.dotsContainer.appendChild(dot);
-          }
-        }
+  createDots() {
+    this.dotsContainer.innerHTML = "";
+    for (let i = 0; i < this.slideCount; i++) {
+      const dot = document.createElement("span");
+      dot.classList.add("dot");
+      if (i === 0) dot.classList.add("active");
+      dot.addEventListener("click", () => this.goToSlide(i, true));
+      this.dotsContainer.appendChild(dot);
+    }
+  }
 
-        goToSlide(index, animate = true) {
-          if (this.isTransitioning) return;
-          if (this.slideCount === 0) return;
+  goToSlide(index, animate = true) {
+    if (this.isTransitioning) return;
+    if (this.slideCount === 0) return;
 
-          // التدوير اللانهائي
-          if (index < 0) index = this.slideCount - 1;
-          if (index >= this.slideCount) index = 0;
+    // التدوير اللانهائي
+    if (index < 0) index = this.slideCount - 1;
+    if (index >= this.slideCount) index = 0;
 
-          this.isTransitioning = true;
-          this.currentIndex = index;
+    this.isTransitioning = true;
+    this.currentIndex = index;
 
-          const containerWidth = this.wrapper.parentElement.clientWidth;
+    const containerWidth = this.wrapper.parentElement.clientWidth;
 
-          // تحريك slider wrapper
-          if (animate) {
-            this.wrapper.style.transition =
-              "transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-          } else {
-            this.wrapper.style.transition = "none";
-          }
+    // تحريك slider wrapper
+    if (animate) {
+      this.wrapper.style.transition =
+        "transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+    } else {
+      this.wrapper.style.transition = "none";
+    }
 
-          this.wrapper.style.transform = `translateX(-${this.currentIndex * containerWidth}px)`;
+    this.wrapper.style.transform = `translateX(-${this.currentIndex * containerWidth}px)`;
 
-          // تحديث النقاط
-          const dots = this.dotsContainer.querySelectorAll(".dot");
-          dots.forEach((dot, i) => {
-            dot.classList.toggle("active", i === this.currentIndex);
-          });
+    // تحديث النقاط
+    const dots = this.dotsContainer.querySelectorAll(".dot");
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === this.currentIndex);
+    });
 
-          // إعادة ضبط شريط التقدم
-          this.resetProgress();
+    // إعادة ضبط شريط التقدم
+    this.resetProgress();
 
-          // السماح بالانتقال بعد اكتماله
-          setTimeout(() => {
-            this.isTransitioning = false;
-          }, 600);
-        }
+    // السماح بالانتقال بعد اكتماله
+    setTimeout(() => {
+      this.isTransitioning = false;
+    }, 600);
+  }
 
-        nextSlide() {
-          this.goToSlide(this.currentIndex + 1, true);
-          this.resetAutoPlay();
-        }
+  nextSlide() {
+    this.goToSlide(this.currentIndex + 1, true);
+    this.resetAutoPlay();
+  }
 
-        prevSlide() {
-          this.goToSlide(this.currentIndex - 1, true);
-          this.resetAutoPlay();
-        }
+  prevSlide() {
+    this.goToSlide(this.currentIndex - 1, true);
+    this.resetAutoPlay();
+  }
 
-        // التشغيل التلقائي
-        startAutoPlay() {
-          this.stopAutoPlay();
-          if (this.slideCount <= 1) return;
-          this.autoPlayTimer = setInterval(() => {
-            this.nextSlide();
-          }, this.autoPlayInterval);
-          this.startProgress();
-        }
+  // التشغيل التلقائي
+  startAutoPlay() {
+    this.stopAutoPlay();
+    if (this.slideCount <= 1) return;
+    this.autoPlayTimer = setInterval(() => {
+      this.nextSlide();
+    }, this.autoPlayInterval);
+    this.startProgress();
+  }
 
-        stopAutoPlay() {
-          if (this.autoPlayTimer) {
-            clearInterval(this.autoPlayTimer);
-            this.autoPlayTimer = null;
-          }
-        }
+  stopAutoPlay() {
+    if (this.autoPlayTimer) {
+      clearInterval(this.autoPlayTimer);
+      this.autoPlayTimer = null;
+    }
+  }
 
-        resetAutoPlay() {
-          this.stopAutoPlay();
-          this.startAutoPlay();
-        }
+  resetAutoPlay() {
+    this.stopAutoPlay();
+    this.startAutoPlay();
+  }
 
-        // شريط التقدم
-        startProgress() {
-          if (!this.progressBar) return;
-          this.progressBar.style.width = "0%";
-          this.progressBar.style.transition = "none";
-          void this.progressBar.offsetWidth;
-          this.progressBar.style.transition = `width ${this.autoPlayInterval}ms linear`;
-          this.progressBar.style.width = "100%";
-        }
+  // شريط التقدم
+  startProgress() {
+    if (!this.progressBar) return;
+    this.progressBar.style.width = "0%";
+    this.progressBar.style.transition = "none";
+    void this.progressBar.offsetWidth;
+    this.progressBar.style.transition = `width ${this.autoPlayInterval}ms linear`;
+    this.progressBar.style.width = "100%";
+  }
 
-        resetProgress() {
-          if (!this.progressBar) return;
-          this.progressBar.style.transition = "none";
-          this.progressBar.style.width = "0%";
-          void this.progressBar.offsetWidth;
-          this.progressBar.style.transition = `width ${this.autoPlayInterval}ms linear`;
-          this.progressBar.style.width = "100%";
-        }
+  resetProgress() {
+    if (!this.progressBar) return;
+    this.progressBar.style.transition = "none";
+    this.progressBar.style.width = "0%";
+    void this.progressBar.offsetWidth;
+    this.progressBar.style.transition = `width ${this.autoPlayInterval}ms linear`;
+    this.progressBar.style.width = "100%";
+  }
 
-        // دعم اللمس للموبايل
-        addTouchSupport() {
-          const container = this.wrapper.parentElement;
-          let startX = 0;
-          let endX = 0;
+  // دعم اللمس للموبايل
+  addTouchSupport() {
+    const container = this.wrapper.parentElement;
+    let startX = 0;
+    let endX = 0;
 
-          container.addEventListener(
-            "touchstart",
-            (e) => {
-              startX = e.touches[0].clientX;
-              this.stopAutoPlay();
-            },
-            { passive: true },
-          );
+    container.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+        this.stopAutoPlay();
+      },
+      { passive: true },
+    );
 
-          container.addEventListener("touchend", (e) => {
-            endX = e.changedTouches[0].clientX;
-            const diff = startX - endX;
+    container.addEventListener("touchend", (e) => {
+      endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
 
-            if (Math.abs(diff) > 50) {
-              if (diff > 0) {
-                this.nextSlide();
-              } else {
-                this.prevSlide();
-              }
-            }
-            this.startAutoPlay();
-          });
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          this.nextSlide();
+        } else {
+          this.prevSlide();
         }
       }
+      this.startAutoPlay();
+    });
+  }
+}
 
-      // تشغيل السلايدر بعد تحميل الصفحة
-      document.addEventListener("DOMContentLoaded", () => {
-        // انتظر قليلاً للتأكد من تحميل كل العناصر
-        setTimeout(() => {
-          new AdvancedSlider({
-            wrapperId: "sliderWrapper",
-            prevBtnId: "prevBtn",
-            nextBtnId: "nextBtn",
-            dotsId: "sliderDots",
-            progressId: "sliderProgress",
-            autoPlayInterval: 4000,
-          });
-        }, 100);
-      });
+// تشغيل السلايدر بعد تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+  // انتظر قليلاً للتأكد من تحميل كل العناصر
+  setTimeout(() => {
+    new AdvancedSlider({
+      wrapperId: "sliderWrapper",
+      prevBtnId: "prevBtn",
+      nextBtnId: "nextBtn",
+      dotsId: "sliderDots",
+      progressId: "sliderProgress",
+      autoPlayInterval: 4000,
+    });
+  }, 100);
+});
 
-      // إعادة تهيئة السلايدر عند تغيير حجم النافذة
-      window.addEventListener("resize", () => {
-        const wrapper = document.getElementById("sliderWrapper");
-        if (wrapper && wrapper.sliderInstance) {
-          wrapper.sliderInstance.fixSlideWidths();
-        }
-      });
+// إعادة تهيئة السلايدر عند تغيير حجم النافذة
+window.addEventListener("resize", () => {
+  const wrapper = document.getElementById("sliderWrapper");
+  if (wrapper && wrapper.sliderInstance) {
+    wrapper.sliderInstance.fixSlideWidths();
+  }
+});
+
+// ========== GALLERY DRAG & INFINITE SCROLL ==========
+document.addEventListener("DOMContentLoaded", () => {
+  const galleryContainer = document.getElementById("galleryContainer");
+  const galleryTrack = document.getElementById("galleryTrack");
+
+  if (!galleryContainer || !galleryTrack) return;
+
+  let isDown = false;
+  let startX = 0;
+  let scrollLeft = 0;
+  let animationPaused = false;
+
+  // Mouse Events
+  galleryContainer.addEventListener("mousedown", (e) => {
+    isDown = true;
+    galleryContainer.style.cursor = "grabbing";
+    startX = e.pageX - galleryContainer.offsetLeft;
+    scrollLeft = galleryContainer.scrollLeft;
+    pauseAnimation();
+  });
+
+  galleryContainer.addEventListener("mouseleave", () => {
+    isDown = false;
+    galleryContainer.style.cursor = "grab";
+    resumeAnimation();
+  });
+
+  galleryContainer.addEventListener("mouseup", () => {
+    isDown = false;
+    galleryContainer.style.cursor = "grab";
+    resumeAnimation();
+  });
+
+  galleryContainer.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - galleryContainer.offsetLeft;
+    const walk = (x - startX) * 1.5; // سرعة السحب
+    galleryContainer.scrollLeft = scrollLeft - walk;
+  });
+
+  // Touch Events for Mobile
+  galleryContainer.addEventListener(
+    "touchstart",
+    (e) => {
+      isDown = true;
+      startX = e.touches[0].pageX - galleryContainer.offsetLeft;
+      scrollLeft = galleryContainer.scrollLeft;
+      pauseAnimation();
+    },
+    { passive: true },
+  );
+
+  galleryContainer.addEventListener("touchend", () => {
+    isDown = false;
+    resumeAnimation();
+  });
+
+  galleryContainer.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!isDown) return;
+      const x = e.touches[0].pageX - galleryContainer.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      galleryContainer.scrollLeft = scrollLeft - walk;
+    },
+    { passive: true },
+  );
+
+  function pauseAnimation() {
+    if (!animationPaused) {
+      galleryTrack.style.animationPlayState = "paused";
+      animationPaused = true;
+    }
+  }
+
+  function resumeAnimation() {
+    if (animationPaused) {
+      galleryTrack.style.animationPlayState = "running";
+      animationPaused = false;
+    }
+  }
+
+  // Click on gallery items
+  const galleryItems = galleryTrack.querySelectorAll(".gallery-item");
+  galleryItems.forEach((item, index) => {
+    item.addEventListener("click", (e) => {
+      // منع تنفيذ الحدث أثناء السحب
+      if (Math.abs(e.pageX - startX) > 5) return;
+
+      const img = item.querySelector("img");
+      const title = item.querySelector("h4")?.textContent || "Project";
+      
+    });
+  });
+});
