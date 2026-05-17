@@ -272,5 +272,3 @@ window.addEventListener("resize", () => {
     wrapper.sliderInstance.fixSlideWidths();
   }
 });
-
-
